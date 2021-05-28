@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         //TODO: 일정 추가 버튼 기능
-        Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
         startActivity(intent);
     }
 
