@@ -29,15 +29,16 @@
                 android:orientation="horizontal">
 
                 <!-- 일정 -->
-                <TextView
+                <EditText
                     android:id="@+id/tv_todo"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:paddingLeft="5dp"
-                    android:text="일정"
+                    android:hint="일정을 입력하세요"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:background="@null"/>
 
                 <!-- 날짜 -->
                 <EditText
