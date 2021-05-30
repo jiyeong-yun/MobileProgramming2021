@@ -2,14 +2,19 @@ package org.techtown.mycalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -17,29 +22,55 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
-import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-public class MapActivity extends AppCompatActivity {
+public class Map_AddscheduleActivity extends AppCompatActivity implements View.OnClickListener {
     Intent intent;
-    int position;
-    Handler handler;
+    Button searchBtn;
+    EditText searchText;
+    String value;
+    View image;
+    int a;
 
     TMapView tmapview;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_map2);
 
         // 지도 띄우기
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
+        searchBtn = findViewById(R.id.btn_search);
+        searchBtn.setOnClickListener(this);
+
+        image = findViewById(R.drawable.poi_dot);
+        image.setOnClickListener(this);
+
+
         initialize(tmapview);
+
+    }
+
+    public void onClick(View v) {
+        //TODO: 검색 버튼 기능+검색 안될 시에 방법 생각....
+        switch (a) {
+            case R.id.btn_search:
+                ArrayList<String> arrBuilding = new ArrayList<>();
+                findPOI();
+                arrBuilding.add(value);
+                searchPOI(arrBuilding);
+                break;
+            case R.drawable.poi_dot:
+                Intent intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
+                startActivity(intent);
+                break;
+        }
 
     }
 
@@ -61,22 +92,17 @@ public class MapActivity extends AppCompatActivity {
     }
 
     // 주변 명칭 검색
-    private void searchPOI(ArrayList<String> arrPOI)
-    {
+    private void searchPOI(ArrayList<String> arrPOI) {
         final TMapData tMapData = new TMapData();
         final ArrayList<TMapPoint> arrTMapPoint = new ArrayList<>();
         final ArrayList<String> arrTitle = new ArrayList<>();
         final ArrayList<String> arrAddress = new ArrayList<>();
 
-        for(int i = 0; i < arrPOI.size(); i++ )
-        {
-            tMapData.findTitlePOI(arrPOI.get(i), new TMapData.FindTitlePOIListenerCallback()
-            {
+        for (int i = 0; i < arrPOI.size(); i++) {
+            tMapData.findTitlePOI(arrPOI.get(i), new TMapData.FindTitlePOIListenerCallback() {
                 @Override
-                public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList)
-                {
-                    for(int j = 0; j < arrayList.size(); j++)
-                    {
+                public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList) {
+                    for (int j = 0; j < arrayList.size(); j++) {
                         TMapPOIItem tMapPOIItem = arrayList.get(j);
                         arrTMapPoint.add(tMapPOIItem.getPOIPoint());
                         arrTitle.add(tMapPOIItem.getPOIName());
@@ -89,12 +115,15 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    private void findPOI() {
+        searchText = findViewById(R.id.text_search);
+        value = searchText.getText().toString();
+    }
+
     // 마커 설정
     private void setMultiMarkers(ArrayList<TMapPoint> arrTPoint, ArrayList<String> arrTitle,
-                                 ArrayList<String> arrAddress)
-    {
-        for( int i = 0; i < arrTPoint.size(); i++ )
-        {
+                                 ArrayList<String> arrAddress) {
+        for (int i = 0; i < arrTPoint.size(); i++) {
             Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_dot);
 
             TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
@@ -109,12 +138,9 @@ public class MapActivity extends AppCompatActivity {
     }
 
     // 풍선뷰
-    private void setBalloonView(TMapMarkerItem marker, String title, String address)
-    {
+    private void setBalloonView(TMapMarkerItem marker, String title, String address) {
         marker.setCanShowCallout(true);
-
-        if( marker.getCanShowCallout() )
-        {
+        if (marker.getCanShowCallout()) {
             marker.setCalloutTitle(title);
             marker.setCalloutSubTitle(address);
 
@@ -123,12 +149,11 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
-    private Bitmap createMarkerIcon(int image)
-    {
+    private Bitmap createMarkerIcon(int image) {
         Log.e("MapViewActivity", "(F)   createMarkerIcon()");
 
         Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), image);
-        bitmap = Bitmap.createScaledBitmap(bitmap, 50, 50,false);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 50, 50, false);
 
         return bitmap;
     }
@@ -150,27 +175,4 @@ public class MapActivity extends AppCompatActivity {
             return false;
         }
     };
-
-
-
-
-
-/*        // TODO: 위치 넘겨서 각 카드뷰에 지도 띄우기 switch문 말고~
-
-        intent = getIntent();
-        position = intent.getIntExtra("position", -1);
-
-        switch (position){
-            case 0:
-                setContentView(R.layout.activity_map);
-                break;
-
-            case 1:
-//                setContentView(R.layout.activity_two);
-                break;
-
-            case 2:
-                //추가 하면됨
-                break;
-        }*/
 }
