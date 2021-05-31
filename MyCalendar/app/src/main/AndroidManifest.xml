@@ -20,6 +20,7 @@
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity android:name=".AddscheduleActivity" />
         <activity android:name=".Map_AddscheduleActivity" />
+        <activity android:name=".AddscheduleActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SplashActivity">

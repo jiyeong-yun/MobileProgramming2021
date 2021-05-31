@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -12,10 +13,14 @@ import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skt.Tmap.TMapData;
@@ -27,12 +32,11 @@ import com.skt.Tmap.TMapView;
 import java.util.ArrayList;
 
 public class Map_AddscheduleActivity extends AppCompatActivity implements View.OnClickListener {
-    Intent intent;
     Button searchBtn;
     EditText searchText;
     String value;
     FloatingActionButton fab;
-
+    View image;
     TMapView tmapview;
 
     @Override
@@ -47,31 +51,54 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         searchBtn = findViewById(R.id.btn_search);
         searchBtn.setOnClickListener(this);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab_add);
         fab.setOnClickListener(this);
+
+
+        /*image = findViewById(R.drawable.poi_dot);
+        image.setOnClickListener(this);*/
 
         initialize(tmapview);
     }
 
     public void onClick(View v) {
+        Intent intent;
         //TODO: 검색 버튼 기능+검색 안될 시에 방법 생각....
         switch (v.getId()) {
             case R.id.btn_search:
-                ArrayList<String> arrBuilding = new ArrayList<>();
                 findPOI();
+                ArrayList<String> arrBuilding = new ArrayList<>();
                 arrBuilding.add(value);
                 searchPOI(arrBuilding);
+                // 하나라도 검색하면 플로팅버튼 보이게 TODO: 마커가 왜 2개 이상 생기지?!!?!?!!!?!?! 정식명칭이 아니라 사용자 text를 넘겨줌...
+                if(arrBuilding != null) {
+                    String location = arrBuilding.get(0);
+                    fab.setVisibility(View.VISIBLE);
+                    SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
+                    SharedPreferences.Editor editor= userlocation.edit();
+                    editor.putString("location", location);
+                    editor.commit();
+                    Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
+                }
                 break;
-            case R.id.fab: //버튼 숨겼다가 나타나게 오류...
-                Intent intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
+            case R.drawable.poi_dot:
+                /*intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
+                startActivity(intent);*/
+                break;
+            case R.id.fab_add:
+                intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
+                SharedPreferences userlocation = getSharedPreferences("userlocation", MODE_PRIVATE);
+                String location = userlocation.getString("location","");
+                intent.putExtra("location", location);
+                Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 break;
         }
     }
 
     private void initialize(TMapView tmapview) {
-        FrameLayout frameLayoutTmap = (FrameLayout) findViewById(R.id.frameLayoutTmap);
-        frameLayoutTmap.addView(tmapview);
+        LinearLayout linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
+        linearLayoutTmap.addView(tmapview);
 
         // 전북대로 설정
         tmapview.setOnClickListenerCallBack(mOnClickListenerCallback);
@@ -79,10 +106,10 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         tmapview.setCenterPoint(127.129436, 35.846964);
 
         // 마커표시
-        ArrayList<String> arrBuilding = new ArrayList<>();
+/*        ArrayList<String> arrBuilding = new ArrayList<>();
         arrBuilding.add("공과대학 7호관");
+        searchPOI(arrBuilding);*/
 
-        searchPOI(arrBuilding);
     }
 
     // 주변 명칭 검색
