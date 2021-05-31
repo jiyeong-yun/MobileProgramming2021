@@ -1,16 +1,30 @@
 package org.techtown.mycalendar;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Data {
-    String todo;
-    String date;
-    String location;
-    String memo;
+    @PrimaryKey(autoGenerate = true)
+    private int uid;
+    private String todo;
+    private String date;
+    private String location;
+    private String memo;
 
     public Data(String todo,String date, String location, String memo) {
         this.todo = todo;
         this.date = date;
         this.location = location;
         this.memo = memo;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public String getTodo() {
