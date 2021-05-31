@@ -15,9 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
@@ -31,12 +31,10 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
     Button searchBtn;
     EditText searchText;
     String value;
-    View image;
-    int a;
+    FloatingActionButton fab;
 
     TMapView tmapview;
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,34 +47,31 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         searchBtn = findViewById(R.id.btn_search);
         searchBtn.setOnClickListener(this);
 
-        image = findViewById(R.drawable.poi_dot);
-        image.setOnClickListener(this);
-
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 
         initialize(tmapview);
-
     }
 
     public void onClick(View v) {
         //TODO: 검색 버튼 기능+검색 안될 시에 방법 생각....
-        switch (a) {
+        switch (v.getId()) {
             case R.id.btn_search:
                 ArrayList<String> arrBuilding = new ArrayList<>();
                 findPOI();
                 arrBuilding.add(value);
                 searchPOI(arrBuilding);
                 break;
-            case R.drawable.poi_dot:
+            case R.id.fab: //버튼 숨겼다가 나타나게 오류...
                 Intent intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
                 startActivity(intent);
                 break;
         }
-
     }
 
     private void initialize(TMapView tmapview) {
-        LinearLayout linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
-        linearLayoutTmap.addView(tmapview);
+        FrameLayout frameLayoutTmap = (FrameLayout) findViewById(R.id.frameLayoutTmap);
+        frameLayoutTmap.addView(tmapview);
 
         // 전북대로 설정
         tmapview.setOnClickListenerCallBack(mOnClickListenerCallback);
@@ -88,7 +83,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         arrBuilding.add("공과대학 7호관");
 
         searchPOI(arrBuilding);
-
     }
 
     // 주변 명칭 검색
@@ -143,11 +137,11 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         if (marker.getCanShowCallout()) {
             marker.setCalloutTitle(title);
             marker.setCalloutSubTitle(address);
-
 //            Bitmap bitmap = createMarkerIcon(R.drawable.right_arrow);
 //            marker.setCalloutRightButtonImage(bitmap);
         }
     }
+
 
     private Bitmap createMarkerIcon(int image) {
         Log.e("MapViewActivity", "(F)   createMarkerIcon()");
@@ -164,7 +158,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
             double latitude = tMapPoint.getLatitude();
             double longitude = tMapPoint.getLongitude();
-
 //                Toast.makeText(MapActivity.this, "onPressed~!", Toast.LENGTH_SHORT).show();
             return false;
         }

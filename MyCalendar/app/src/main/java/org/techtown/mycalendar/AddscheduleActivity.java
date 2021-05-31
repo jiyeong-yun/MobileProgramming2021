@@ -1,7 +1,6 @@
 package org.techtown.mycalendar;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddscheduleActivity extends AppCompatActivity {
