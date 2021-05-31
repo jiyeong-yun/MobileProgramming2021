@@ -36,7 +36,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
     EditText searchText;
     String value;
     FloatingActionButton fab;
-    View image;
     TMapView tmapview;
 
     @Override
@@ -53,10 +52,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
 
         fab = findViewById(R.id.fab_add);
         fab.setOnClickListener(this);
-
-
-        /*image = findViewById(R.drawable.poi_dot);
-        image.setOnClickListener(this);*/
 
         initialize(tmapview);
     }
@@ -80,10 +75,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
                     editor.commit();
                     Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
                 }
-                break;
-            case R.drawable.poi_dot:
-                /*intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
-                startActivity(intent);*/
                 break;
             case R.id.fab_add:
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);

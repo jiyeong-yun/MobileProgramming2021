@@ -26,7 +26,7 @@
             android:id="@+id/today_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:layout_marginLeft="60dp"
             android:layout_gravity="center_vertical"
             android:text="2021-06-14"
