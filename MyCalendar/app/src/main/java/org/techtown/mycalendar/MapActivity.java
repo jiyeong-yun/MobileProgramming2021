@@ -7,26 +7,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
-import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity {
     Intent intent;
-    int position;
-    Handler handler;
 
     TMapView tmapview;
 
@@ -52,9 +45,12 @@ public class MapActivity extends AppCompatActivity {
         tmapview.setZoomLevel(15);
         tmapview.setCenterPoint(127.129436, 35.846964);
 
+        intent = getIntent();
+        String location = intent.getExtras().getString("location");
+
         // 마커표시
         ArrayList<String> arrBuilding = new ArrayList<>();
-        arrBuilding.add("공과대학 7호관");
+        arrBuilding.add(location);
 
         searchPOI(arrBuilding);
 

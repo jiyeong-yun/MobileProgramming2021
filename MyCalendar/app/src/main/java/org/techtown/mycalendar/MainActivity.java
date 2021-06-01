@@ -53,13 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(layoutManager);
 
         /*List<Data> list = new ArrayList<>();
-        list.add(new Data("시험", "2021-05-23","공대7호관","10시"));*/
+        list.add(new Data("시험", "2021-05-23","오전 10:00", "공대7호관","10시"));*/
 
-        /*Data user = new Data("공부","2021-06-05","학습도서관","오후 2시");
-        userRepository.insert(user);*/
         List<Data> list = userRepository.findAll();
 
-        for(i=0; i<list.size(); i++) {
+        for( i = 0; i < list.size(); i++) {
             Log.d("TAG", "onCreate: findAll() : " + list.get(i).getUid());
             Log.d("TAG", "onCreate: findAll() : " + list.get(i).getTodo());
             Log.d("TAG", "onCreate: findAll() : " + list.get(i).getDate());

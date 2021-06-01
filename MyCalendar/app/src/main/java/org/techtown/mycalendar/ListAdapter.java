@@ -2,10 +2,10 @@ package org.techtown.mycalendar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -63,13 +63,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView todo, date, location, memo;
+        TextView todo, date, time, location, memo;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             todo = itemView.findViewById(R.id.tv_todo);
             date = itemView.findViewById(R.id.tv_date);
+            time = itemView.findViewById(R.id.tv_time);
             location = itemView.findViewById(R.id.tv_location);
             memo = itemView.findViewById(R.id.tv_memo);
 
@@ -80,6 +81,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                     if(position != RecyclerView.NO_POSITION){
                         Intent intent = new Intent(v.getContext(), MapActivity.class);
                         intent.putExtra("position", position);
+                        intent.putExtra("location", location.getText().toString());
+                        Log.d("TAG", "onClick: " + location.getText().toString());
                         v.getContext().startActivity(intent);
                     }
                 }
@@ -90,6 +93,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         public void setItem(Data item) {
             todo.setText(item.getTodo());
             date.setText(item.getDate());
+            time.setText(item.getTime());
             location.setText(item.getLocation());
             memo.setText(item.getMemo());
         }

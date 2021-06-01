@@ -54,7 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="25dp"
-        android:backgroundTint="@color/purple_200"
+        android:src="@drawable/plus"
+        app:backgroundTint="@color/white"
         android:visibility="invisible"
         android:clickable="true" />
 

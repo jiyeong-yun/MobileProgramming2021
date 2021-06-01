@@ -3,49 +3,61 @@ package org.techtown.mycalendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class AddscheduleActivity extends AppCompatActivity implements View.OnClickListener{
-    TextView tv_location, today_date;
-    Button btn_date, btn_time;
+    TextView set_location, today_date;
+    EditText et_todo, et_memo;
+    Button btn_date, btn_time, btn_save;
+    String date, time, location;
+
     Calendar c = Calendar.getInstance();
-    String date, time;
+    private UserRepository userRepository;
+    Intent intent;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addschedule);
 
         today_date = findViewById(R.id.today_date);
-        tv_location = findViewById(R.id.tv_location);
+        set_location = findViewById(R.id.set_location);
         btn_date = findViewById(R.id.btn_date);
         btn_time = findViewById(R.id.btn_time);
         ImageButton button = findViewById(R.id.btn_back);
+        btn_save = findViewById(R.id.btn_save);
+        et_todo = findViewById(R.id.et_todo);
+        et_memo = findViewById(R.id.et_memo);
 
-        Intent intent = getIntent();
-        String location = intent.getExtras().getString("location");
-        tv_location.setText(location);
+        intent = getIntent();
+        location = intent.getExtras().getString("location");
+        set_location.setText(location);
 
         btn_date.setOnClickListener(this);
         btn_time.setOnClickListener(this);
         button.setOnClickListener(this);
+        btn_save.setOnClickListener(this);
+
+        UserDatabase db= Room.databaseBuilder(getApplicationContext(),UserDatabase.class,"db-mary")
+                .fallbackToDestructiveMigration() //스키마 버전 변경 가능
+                .allowMainThreadQueries() // 메인 스레드에서 DB에 IO를 가능하게 함
+                .build();
+        userRepository=db.userRepository();
 
         date();
     }
@@ -60,6 +72,17 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.btn_time:
                 setTime();
+                break;
+            case R.id.btn_save:
+                Log.d("###", et_todo.getText().toString());
+                Log.d("###", date);
+                Log.d("###", time);
+                Log.d("###", location);
+                Log.d("###", et_memo.getText().toString());
+                Data user = new Data(et_todo.getText().toString(),date,time,location,et_memo.getText().toString());
+                userRepository.insert(user);
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
                 break;
         }
     }

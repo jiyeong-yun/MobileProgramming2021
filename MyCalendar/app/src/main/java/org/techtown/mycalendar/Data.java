@@ -9,12 +9,14 @@ public class Data {
     private int uid;
     private String todo;
     private String date;
+    private String time;
     private String location;
     private String memo;
 
-    public Data(String todo, String date, String location, String memo) {
+    public Data(String todo, String date, String time, String location, String memo) {
         this.todo = todo;
         this.date = date;
+        this.time = time;
         this.location = location;
         this.memo = memo;
     }
@@ -41,6 +43,14 @@ public class Data {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getLocation() {

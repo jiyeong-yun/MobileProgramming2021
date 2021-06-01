@@ -90,6 +90,34 @@
 
             </LinearLayout>
 
+            <!-- 시간 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:text="시간"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:gravity="end|fill_vertical"
+                    android:text="오전 10:00"
+                    android:textColor="#333232"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <!-- 세부사항 -->
             <LinearLayout
                 android:layout_width="match_parent"
