@@ -71,7 +71,7 @@
         android:layout_marginBottom="20dp"
         android:paddingEnd="10dp"
         android:gravity="fill_vertical"
-        android:hint="일정 입력하세요"
+        android:hint="일정을 입력하세요"
         android:textColor="#333232"
         android:textSize="20sp"
         android:background="@null"/>
@@ -130,8 +130,8 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="20dp"
         android:paddingEnd="10dp"
-        android:gravity="center_vertical"
-        android:text="장소는 이미 선택됨..."
+        android:gravity="center"
+        android:text="장소"
         android:textColor="#333232"
         android:textSize="20sp"/>
 

@@ -10,6 +10,7 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
     String value;
     FloatingActionButton fab;
     TMapView tmapview;
+    InputMethodManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.btn_search:
                 search();
+                manager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(searchBtn.getWindowToken(), 0);
                 break;
 
             case R.id.fab_add:
