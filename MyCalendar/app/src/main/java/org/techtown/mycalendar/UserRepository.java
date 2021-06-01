@@ -18,6 +18,9 @@ public interface UserRepository {
     @Insert
     void insert(Data data);
 
-    @Delete
-    void delete(Data data); //내부에 값을 넣어서 삭제 가능(오버로딩)
+    @Query("DELETE FROM data WHERE uid=:uid")
+    void delete(int uid);
+
+    /*@Delete
+    void delete(Data data); //내부에 값을 넣어서 삭제 가능(오버로딩)*/
 }

@@ -12,7 +12,7 @@ public class Data {
     private String location;
     private String memo;
 
-    public Data(String todo,String date, String location, String memo) {
+    public Data(String todo, String date, String location, String memo) {
         this.todo = todo;
         this.date = date;
         this.location = location;

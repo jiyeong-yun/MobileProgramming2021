@@ -57,9 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Data user = new Data("공부","2021-06-05","학습도서관","오후 2시");
         userRepository.insert(user);
-        Log.d("TAG", "onCreate: 저장?");
-
         List<Data> list = userRepository.findAll();
+
         for(i=0; i<list.size(); i++) {
             Log.d("TAG", "onCreate: findAll() : " + list.get(i).getUid());
             Log.d("TAG", "onCreate: findAll() : " + list.get(i).getTodo());
