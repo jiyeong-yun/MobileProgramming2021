@@ -26,6 +26,8 @@ import java.util.Locale;
 public class AddscheduleActivity extends AppCompatActivity implements View.OnClickListener{
     TextView tv_location, today_date;
     Button btn_date, btn_time;
+    Calendar c = Calendar.getInstance();
+    String date, time;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -71,10 +73,9 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setDate() {
-        Calendar c = Calendar.getInstance();
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
+        int Year = c.get(Calendar.YEAR);
+        int Month = c.get(Calendar.MONTH);
+        int Day = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -87,21 +88,19 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
                 if(dayOfMonth < 10){
                     stringDay = "0" + String.valueOf(dayOfMonth);
                 }
-                String date = year + "/" + stringMonth + "/" + stringDay;
+                date = year + "/" + stringMonth + "/" + stringDay;
                 btn_date.setText(date);
             }
-        }, mYear, mMonth, mDay);
+        }, Year, Month, Day);
         if (btn_date.isClickable()) {
             datePickerDialog.show();
         }
     }
 
     private void setTime() {
-        Calendar mcurrentTime = Calendar.getInstance();
-        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = mcurrentTime.get(Calendar.MINUTE);
-        TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(AddscheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddscheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 String state = "오전";
@@ -114,16 +113,16 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
                     selectedHour -= 12;
                     state = "오후";
                 }
-                if(selectedHour == 0 ){
-                    stringHour = "00";
+                if(selectedHour < 10) {
+                    stringHour = "0" + String.valueOf(selectedHour);
                 }
-                if(selectedMinute == 0) {
-                    stringMinute = "00";
+                if(selectedMinute < 10) {
+                    stringMinute = "0" + String.valueOf(selectedMinute);
                 }
-                String time = state + " " + stringHour + " : " + stringMinute;
+                time = state + " " + stringHour + " : " + stringMinute;
                 btn_time.setText(time);
             }
         }, hour, minute, false); // true -> 24시간 형식
-        mTimePicker.show();
+        timePickerDialog.show();
     }
 }
