@@ -31,7 +31,7 @@
             android:layout_gravity="center_vertical"
             android:text="2021-06-14"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/deleteButton"
@@ -52,36 +52,43 @@
         android:layout_marginTop="5dp" />
 
     <TextView
-        android:id="@+id/tv_todo"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="날짜/시간"
+        android:text="날짜"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:background="#00ff0000"
+        android:text="날짜 선택하기"
+        android:textSize="20sp" />
 
-        <DatePicker
-            android:id="@+id/et_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner" />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="시간"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
-        <TimePicker
-            android:id="@+id/et_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:timePickerMode="spinner" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/btn_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#00ff0000"
+        android:text="시간 선택하기"
+        android:textSize="20sp" />
+
+
 
     <TextView
         android:layout_width="wrap_content"
