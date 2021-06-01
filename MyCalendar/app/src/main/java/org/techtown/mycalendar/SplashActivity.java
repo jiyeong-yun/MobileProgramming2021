@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 public class SplashActivity extends AppCompatActivity {
-
     Handler handler;
     final int DELAY = 1000;
 

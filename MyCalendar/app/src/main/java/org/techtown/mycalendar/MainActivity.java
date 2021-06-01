@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        //TODO: 일정 추가 버튼 기능
+        // 일정 추가
         Intent intent = new Intent(getApplicationContext(), Map_AddscheduleActivity.class);
         startActivity(intent);
     }
@@ -52,17 +52,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        /*List<Data> list = new ArrayList<>();
-        list.add(new Data("시험", "2021-05-23","오전 10:00", "공대7호관","10시"));*/
-
         List<Data> list = userRepository.findAll();
 
         for( i = 0; i < list.size(); i++) {
-            Log.d("TAG", "onCreate: findAll() : " + list.get(i).getUid());
-            Log.d("TAG", "onCreate: findAll() : " + list.get(i).getTodo());
-            Log.d("TAG", "onCreate: findAll() : " + list.get(i).getDate());
-            Log.d("TAG", "onCreate: findAll(): "+list.get(i).getLocation());
-            Log.d("TAG", "onCreate: findAll(): "+list.get(i).getMemo());
+            Log.d("###", "findAll - getUid(): " + list.get(i).getUid());
+            Log.d("###", "findAll - getTodo(): " + list.get(i).getTodo());
+            Log.d("###", "findAll - getDate(): " + list.get(i).getDate());
+            Log.d("###", "findAll - getTime(): " + list.get(i).getTime());
+            Log.d("###", "findAll - getLocation(): "+list.get(i).getLocation());
+            Log.d("###", "findAll - getMemo(): "+list.get(i).getMemo());
         }
 
         adapter = new ListAdapter(this, (ArrayList<Data>) list);

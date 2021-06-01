@@ -74,17 +74,17 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
                 setTime();
                 break;
             case R.id.btn_save:
-                Log.d("###", et_todo.getText().toString());
-                Log.d("###", date);
-                Log.d("###", time);
-                Log.d("###", location);
-                Log.d("###", et_memo.getText().toString());
-                Data user = new Data(et_todo.getText().toString(),date,time,location,et_memo.getText().toString());
-                userRepository.insert(user);
+                saveData();
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void saveData() {
+        Log.d("###", et_todo.getText().toString() + " " + date + " " + time + " " + location + " " + et_memo.getText().toString());
+        Data user = new Data(et_todo.getText().toString(),date,time,location,et_memo.getText().toString());
+        userRepository.insert(user);
     }
 
     // 오늘 날짜 표시

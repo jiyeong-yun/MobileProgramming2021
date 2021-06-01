@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
-    List<Data> datas =null;
+    List<Data> datas = null;
     ArrayList<Data> arrayList;
     Context context;
 
@@ -82,7 +82,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                         Intent intent = new Intent(v.getContext(), MapActivity.class);
                         intent.putExtra("position", position);
                         intent.putExtra("location", location.getText().toString());
-                        Log.d("TAG", "onClick: " + location.getText().toString());
+                        Log.d("###", "카드뷰 location: " + location.getText().toString());
                         v.getContext().startActivity(intent);
                     }
                 }

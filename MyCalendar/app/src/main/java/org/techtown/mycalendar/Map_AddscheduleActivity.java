@@ -2,23 +2,16 @@ package org.techtown.mycalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -48,9 +41,9 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
         searchBtn = findViewById(R.id.btn_search);
-        searchBtn.setOnClickListener(this);
-
         fab = findViewById(R.id.fab_add);
+
+        searchBtn.setOnClickListener(this);
         fab.setOnClickListener(this);
 
         initialize(tmapview);
@@ -58,33 +51,37 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
 
     public void onClick(View v) {
         Intent intent;
-        //TODO: 검색 버튼 기능+검색 안될 시에 방법 생각....
+        //TODO: 주소 없는 곳 처리하기
         switch (v.getId()) {
             case R.id.btn_search:
-                tmapview.removeAllMarkerItem();
-                findPOI();
-                ArrayList<String> arrBuilding = new ArrayList<>();
-                arrBuilding.add(value);
-                searchPOI(arrBuilding);
-                // 하나라도 검색하면 플로팅버튼 보이게 TODO: 마커가 왜 2개 이상 생기지?!!?!?!!!?!?! 정식명칭이 아니라 사용자 text를 넘겨줌...
-                if(arrBuilding != null) {
-                    String location = arrBuilding.get(0);
-                    fab.setVisibility(View.VISIBLE);
-                    SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
-                    SharedPreferences.Editor editor= userlocation.edit();
-                    editor.putString("location", location);
-                    editor.commit();
-                    Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
-                }
+                search();
                 break;
+
             case R.id.fab_add:
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
                 SharedPreferences userlocation = getSharedPreferences("userlocation", MODE_PRIVATE);
                 String location = userlocation.getString("location","");
                 intent.putExtra("location", location);
-                Toast.makeText(this, location, Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 break;
+        }
+    }
+
+    // TODO: 검색 누르면 자판 내리기
+    private void search() {
+        tmapview.removeAllMarkerItem();
+        findPOI();
+        ArrayList<String> arrBuilding = new ArrayList<>();
+        arrBuilding.add(value);
+        searchPOI(arrBuilding);
+        // 하나라도 검색하면 플로팅버튼 보이게
+        if(arrBuilding != null) {
+            String location = arrBuilding.get(0);
+            fab.setVisibility(View.VISIBLE);
+            SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
+            SharedPreferences.Editor editor= userlocation.edit();
+            editor.putString("location", location);
+            editor.commit();
         }
     }
 
@@ -98,7 +95,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         tmapview.setCenterPoint(127.129436, 35.846964);
 
         // 마커표시
-/*        ArrayList<String> arrBuilding = new ArrayList<>();
+        /*ArrayList<String> arrBuilding = new ArrayList<>();
         arrBuilding.add("공과대학 7호관");
         searchPOI(arrBuilding);*/
 
