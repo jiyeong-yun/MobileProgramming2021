@@ -61,6 +61,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         //TODO: 검색 버튼 기능+검색 안될 시에 방법 생각....
         switch (v.getId()) {
             case R.id.btn_search:
+                tmapview.removeAllMarkerItem();
                 findPOI();
                 ArrayList<String> arrBuilding = new ArrayList<>();
                 arrBuilding.add(value);
