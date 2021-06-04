@@ -53,7 +53,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
 
     public void onClick(View v) {
         Intent intent;
-        //TODO: 주소 없는 곳 처리하기
+
         switch (v.getId()) {
             case R.id.btn_search:
                 search();
@@ -71,7 +71,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         }
     }
 
-    // TODO: 검색 누르면 자판 내리기
     private void search() {
         tmapview.removeAllMarkerItem();
         findPOI();
@@ -178,13 +177,11 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
             double latitude = tMapPoint.getLatitude();
             double longitude = tMapPoint.getLongitude();
-//                Toast.makeText(MapActivity.this, "onPressed~!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         @Override
         public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-//                Toast.makeText(MapActivity.this, "onPressUp~!", Toast.LENGTH_SHORT).show();
             return false;
         }
     };

@@ -68,4 +68,5 @@ public class Data {
     public void setMemo(String memo) {
         this.memo = memo;
     }
+    
 }
