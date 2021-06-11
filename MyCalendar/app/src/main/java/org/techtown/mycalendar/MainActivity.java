@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView;
     SwipeController swipeController = null;
 
+    Intent intent;
     private UserRepository userRepository;
     private int i = 0;
 
@@ -34,16 +37,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addBtn = findViewById(R.id.btn_add);
         recyclerView = findViewById(R.id.recyclerView);
 
+        addBtn.setOnClickListener(this);
+
         UserDatabase db= Room.databaseBuilder(getApplicationContext(),UserDatabase.class,"db-mary")
                 .fallbackToDestructiveMigration() //스키마 버전 변경 가능
                 .allowMainThreadQueries() // 메인 스레드에서 DB에 IO를 가능하게 함
                 .build();
         userRepository=db.userRepository();
 
-        addBtn.setOnClickListener(this);
-
         recycleView();
-
     }
 
     @Override
@@ -79,7 +81,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.datas.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                list.remove(position);
+                userRepository.delete(list.get(position).getUid());
+            }
+            @Override
+            public void onLeftClicked(int position){
+                String location = list.get(position).getLocation();
+                int uid = list.get(position).getUid();
+                userRepository.delete(list.get(position).getUid());
+                intent.putExtra("location", location);
+                intent.putExtra("uid", uid);
+                intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
+                startActivity(intent);
             }
         });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
