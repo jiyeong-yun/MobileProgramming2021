@@ -165,7 +165,7 @@ class SwipeController extends Callback {
         c.drawRoundRect(rightButton, corners, corners, p);
         drawText("DELETE", c, rightButton, p);
 
-        buttonInstance = null;
+        buttonInstance = null; //TODO :버튼 상대쪽 으로 넘기면 안보이게 설정
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
             buttonInstance = leftButton;
         }

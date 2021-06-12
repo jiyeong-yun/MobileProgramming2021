@@ -78,20 +78,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         swipeController = new SwipeController(new SwipeControllerAction() {
             @Override
             public void onRightClicked(int position) {
+                userRepository.delete(list.get(position).getUid());
                 adapter.datas.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                userRepository.delete(list.get(position).getUid());
             }
             @Override
             public void onLeftClicked(int position){
-                String location = list.get(position).getLocation();
+                //TODO:장소 변경방법 생각... 일자시간 변경...
+                /*String location = list.get(position).getLocation();
                 int uid = list.get(position).getUid();
+
                 userRepository.delete(list.get(position).getUid());
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                 intent.putExtra("location", location);
                 intent.putExtra("uid", uid);
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
