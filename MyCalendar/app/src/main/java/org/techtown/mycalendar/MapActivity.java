@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -14,13 +16,22 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MapActivity extends AppCompatActivity {
     Intent intent;
     TMapView tmapview;
+
+    TMapPoint tMapPointEnd = new TMapPoint(35.84718, 127.13624);
+    TMapPoint tMapPointStart = new TMapPoint(35.54600, 127.13600);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +43,34 @@ public class MapActivity extends AppCompatActivity {
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
         initialize(tmapview);
+        TMapPolyLine polyLine = new TMapPolyLine();
+        PathAsync pathAsync = new PathAsync();
+        pathAsync.execute(polyLine);
 
+    }
+
+    class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
+        @Override
+        protected TMapPolyLine doInBackground(TMapPolyLine... tMapPolyLines) {
+            TMapPolyLine tMapPolyLine = tMapPolyLines[0];
+            try {
+                tMapPolyLine = new TMapData().findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, tMapPointStart, tMapPointEnd);
+                tMapPolyLine.setLineColor(Color.BLACK);
+                tMapPolyLine.setLineWidth(4);
+
+
+            }catch(Exception e) {
+                e.printStackTrace();
+                Log.e("error",e.getMessage());
+            }
+            return tMapPolyLine;
+        }
+
+        @Override
+        protected void onPostExecute(TMapPolyLine tMapPolyLine) {
+            super.onPostExecute(tMapPolyLine);
+            tmapview.addTMapPolyLine("Line", tMapPolyLine);
+        }
     }
 
     private void initialize(TMapView tmapview) {
@@ -52,7 +90,7 @@ public class MapActivity extends AppCompatActivity {
         arrBuilding.add(location);
 
         searchPOI(arrBuilding);
-
+        //길 표시 함수..
     }
 
     // 주변 명칭 검색
