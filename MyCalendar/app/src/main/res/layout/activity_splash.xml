@@ -13,5 +13,7 @@
         android:layout_height="300dp"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="150dp"
-        android:background="@drawable/logo" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/logo2" />
 </LinearLayout>

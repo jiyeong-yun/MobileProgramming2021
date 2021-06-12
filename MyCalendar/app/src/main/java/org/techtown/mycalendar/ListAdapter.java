@@ -83,7 +83,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                         Intent intent = new Intent(v.getContext(), MapActivity.class);
                         intent.putExtra("position", position);
                         intent.putExtra("location", location.getText().toString());
-                        Log.d("###", "카드뷰 location: " + location.getText().toString());
+                        Log.d("###", "카드뷰 position: " + position);
                         v.getContext().startActivity(intent);
                     }
                 }

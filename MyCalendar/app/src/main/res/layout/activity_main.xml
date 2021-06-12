@@ -12,9 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_gravity="right"
+        android:background="@drawable/button"
         android:text="일정추가"
+        android:textStyle="bold"
         android:textSize="15sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
