@@ -66,6 +66,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
                 String location = userlocation.getString("location","");
                 intent.putExtra("location", location);
                 startActivity(intent);
+                finish();
                 break;
         }
     }

@@ -77,6 +77,7 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
                 saveData();
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }
