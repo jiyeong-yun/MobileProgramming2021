@@ -2,17 +2,25 @@ package org.techtown.mycalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
@@ -29,24 +37,36 @@ import javax.xml.parsers.ParserConfigurationException;
 public class MapActivity extends AppCompatActivity {
     Intent intent;
     TMapView tmapview;
-
-    TMapPoint tMapPointEnd = new TMapPoint(35.84718, 127.13624);
-    TMapPoint tMapPointStart = new TMapPoint(35.54600, 127.13600);
+    TMapPoint tMapPointStart;
+    TMapPoint tMapPointEnd;
+    double lat,lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         // 지도 띄우기
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
         initialize(tmapview);
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1,locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000,1,locationListener);
+        }catch (SecurityException e){
+            Toast.makeText(getApplicationContext(),"위치가 파악 불가!", Toast.LENGTH_SHORT).show();
+            locationManager.removeUpdates(locationListener);
+        }
+
+        tMapPointStart = new TMapPoint(lat, lon);
+        tMapPointEnd = new TMapPoint(35.84854, 127.12937);
+
         TMapPolyLine polyLine = new TMapPolyLine();
         PathAsync pathAsync = new PathAsync();
         pathAsync.execute(polyLine);
-
     }
 
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
@@ -55,9 +75,8 @@ public class MapActivity extends AppCompatActivity {
             TMapPolyLine tMapPolyLine = tMapPolyLines[0];
             try {
                 tMapPolyLine = new TMapData().findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, tMapPointStart, tMapPointEnd);
-                tMapPolyLine.setLineColor(Color.BLACK);
+                tMapPolyLine.setOutLineColor(Color.BLACK);
                 tMapPolyLine.setLineWidth(4);
-
 
             }catch(Exception e) {
                 e.printStackTrace();
@@ -80,7 +99,6 @@ public class MapActivity extends AppCompatActivity {
         // 전북대로 설정
         tmapview.setOnClickListenerCallBack(mOnClickListenerCallback);
         tmapview.setZoomLevel(15);
-        tmapview.setCenterPoint(127.129436, 35.846964);
 
         intent = getIntent();
         String location = intent.getExtras().getString("location");
@@ -90,8 +108,27 @@ public class MapActivity extends AppCompatActivity {
         arrBuilding.add(location);
 
         searchPOI(arrBuilding);
-        //길 표시 함수..
     }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            lat = location.getLatitude(); // 위도 읽어오기
+            lon = location.getLongitude(); // 경도 읽어오기
+            tmapview.setCenterPoint(lon, lat);
+            tmapview.setLocationPoint(lon, lat);
+            tmapview.setIconVisibility(true);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) { }
+
+        @Override
+        public void onProviderEnabled(String s) { }
+
+        @Override
+        public void onProviderDisabled(String s) { }
+    };
 
     // 주변 명칭 검색
     private void searchPOI(ArrayList<String> arrPOI)
