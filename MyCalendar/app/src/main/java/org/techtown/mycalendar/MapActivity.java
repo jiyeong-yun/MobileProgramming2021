@@ -1,14 +1,23 @@
 package org.techtown.mycalendar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,6 +28,7 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.Marker;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
@@ -31,6 +41,8 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -39,30 +51,46 @@ public class MapActivity extends AppCompatActivity {
     TMapView tmapview;
     TMapPoint tMapPointStart;
     TMapPoint tMapPointEnd;
-    double lat,lon;
+    private GpsTracker gpsTracker;
+
+
+    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    private static final int PERMISSIONS_REQUEST_CODE = 100;
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        // 지도 띄우기
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
+        double lat2 = 35.84687;
+        double lon2 = 127.12939;
+
         initialize(tmapview);
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1,locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000,1,locationListener);
-        }catch (SecurityException e){
-            Toast.makeText(getApplicationContext(),"위치가 파악 불가!", Toast.LENGTH_SHORT).show();
-            locationManager.removeUpdates(locationListener);
+
+        if (!checkLocationServicesStatus()) {
+
+            showDialogForLocationServiceSetting();
+        } else {
+
+            checkRunTimePermission();
         }
 
-        tMapPointStart = new TMapPoint(lat, lon);
-        tMapPointEnd = new TMapPoint(35.84854, 127.12937);
+        gpsTracker = new GpsTracker(MapActivity.this);
+
+        double lat1 = gpsTracker.getLatitude();
+        double lon1 = gpsTracker.getLongitude();
+        tmapview.setCenterPoint(lon1, lat1);
+        tmapview.setLocationPoint(lon1, lat1);
+
+
+        tMapPointStart = new TMapPoint(lat1, lon1);
+        tMapPointEnd = new TMapPoint(lat2, lon2);
+
+        Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
 
         TMapPolyLine polyLine = new TMapPolyLine();
         PathAsync pathAsync = new PathAsync();
@@ -78,9 +106,9 @@ public class MapActivity extends AppCompatActivity {
                 tMapPolyLine.setOutLineColor(Color.BLACK);
                 tMapPolyLine.setLineWidth(4);
 
-            }catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("error",e.getMessage());
+                Log.e("error", e.getMessage());
             }
             return tMapPolyLine;
         }
@@ -102,51 +130,27 @@ public class MapActivity extends AppCompatActivity {
 
         intent = getIntent();
         String location = intent.getExtras().getString("location");
-
         // 마커표시
         ArrayList<String> arrBuilding = new ArrayList<>();
         arrBuilding.add(location);
 
         searchPOI(arrBuilding);
+
     }
 
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            lat = location.getLatitude(); // 위도 읽어오기
-            lon = location.getLongitude(); // 경도 읽어오기
-            tmapview.setCenterPoint(lon, lat);
-            tmapview.setLocationPoint(lon, lat);
-            tmapview.setIconVisibility(true);
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) { }
-
-        @Override
-        public void onProviderEnabled(String s) { }
-
-        @Override
-        public void onProviderDisabled(String s) { }
-    };
 
     // 주변 명칭 검색
-    private void searchPOI(ArrayList<String> arrPOI)
-    {
+    private void searchPOI(ArrayList<String> arrPOI) {
         final TMapData tMapData = new TMapData();
         final ArrayList<TMapPoint> arrTMapPoint = new ArrayList<>();
         final ArrayList<String> arrTitle = new ArrayList<>();
         final ArrayList<String> arrAddress = new ArrayList<>();
 
-        for(int i = 0; i < arrPOI.size(); i++ )
-        {
-            tMapData.findTitlePOI(arrPOI.get(i), new TMapData.FindTitlePOIListenerCallback()
-            {
+        for (int i = 0; i < arrPOI.size(); i++) {
+            tMapData.findTitlePOI(arrPOI.get(i), new TMapData.FindTitlePOIListenerCallback() {
                 @Override
-                public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList)
-                {
-                    for(int j = 0; j < arrayList.size(); j++)
-                    {
+                public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList) {
+                    for (int j = 0; j < arrayList.size(); j++) {
                         TMapPOIItem tMapPOIItem = arrayList.get(j);
                         arrTMapPoint.add(tMapPOIItem.getPOIPoint());
                         arrTitle.add(tMapPOIItem.getPOIName());
@@ -154,6 +158,7 @@ public class MapActivity extends AppCompatActivity {
                                 tMapPOIItem.middleAddrName + " " + tMapPOIItem.lowerAddrName);
                     }
                     setMultiMarkers(arrTMapPoint, arrTitle, arrAddress);
+
                 }
             });
         }
@@ -161,10 +166,8 @@ public class MapActivity extends AppCompatActivity {
 
     // 마커 설정
     private void setMultiMarkers(ArrayList<TMapPoint> arrTPoint, ArrayList<String> arrTitle,
-                                 ArrayList<String> arrAddress)
-    {
-        for( int i = 0; i < arrTPoint.size(); i++ )
-        {
+                                 ArrayList<String> arrAddress) {
+        for (int i = 0; i < arrTPoint.size(); i++) {
             Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
 
             TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
@@ -179,26 +182,22 @@ public class MapActivity extends AppCompatActivity {
     }
 
     // 풍선뷰
-    private void setBalloonView(TMapMarkerItem marker, String title, String address)
-    {
+    private void setBalloonView(TMapMarkerItem marker, String title, String address) {
         marker.setCanShowCallout(true);
 
-        if( marker.getCanShowCallout() )
-        {
+        if (marker.getCanShowCallout()) {
             marker.setCalloutTitle(title);
             marker.setCalloutSubTitle(address);
-
 //            Bitmap bitmap = createMarkerIcon(R.drawable.right_arrow);
 //            marker.setCalloutRightButtonImage(bitmap);
         }
     }
 
-    private Bitmap createMarkerIcon(int image)
-    {
+    private Bitmap createMarkerIcon(int image) {
         Log.e("MapViewActivity", "(F)   createMarkerIcon()");
 
         Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), image);
-        bitmap = Bitmap.createScaledBitmap(bitmap, 50, 50,false);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 50, 50, false);
 
         return bitmap;
     }
@@ -207,10 +206,10 @@ public class MapActivity extends AppCompatActivity {
     TMapView.OnClickListenerCallback mOnClickListenerCallback = new TMapView.OnClickListenerCallback() {
         @Override
         public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-            double latitude = tMapPoint.getLatitude();
-            double longitude = tMapPoint.getLongitude();
-
 //                Toast.makeText(MapActivity.this, "onPressed~!", Toast.LENGTH_SHORT).show();
+            //double lat2 = tMapPoint.getLatitude();
+            //double lon2 = tMapPoint.getLongitude();
+
             return false;
         }
 
@@ -220,5 +219,124 @@ public class MapActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    public void onRequestPermissionsResult(int permsRequestCode, @NonNull String[] permissions, @NonNull int[] grandResults) {
+        super.onRequestPermissionsResult(permsRequestCode, permissions, grandResults);
+        if (permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
+
+            boolean check_result = true;
+
+            for (int result : grandResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    check_result = false;
+                    break;
+                }
+            }
+
+            if (check_result) { ;
+            }
+            else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])
+                        || ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[1])) {
+
+                    Toast.makeText(MapActivity.this, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요.", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(MapActivity.this, "퍼미션이 거부되었습니다. 설정(앱 정보)에서 퍼미션을 허용해야 합니다. ", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    void checkRunTimePermission() {
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
+                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MapActivity.this, REQUIRED_PERMISSIONS[0])) {
+
+                Toast.makeText(MapActivity.this, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(MapActivity.this, REQUIRED_PERMISSIONS,
+                        PERMISSIONS_REQUEST_CODE);
+            } else {
+               ActivityCompat.requestPermissions(MapActivity.this, REQUIRED_PERMISSIONS,
+                        PERMISSIONS_REQUEST_CODE);
+            }
+        }
+    }
+
+    public String getCurrentAddress(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 7);
+        } catch (IOException ioException) {
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용불가";
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            return "잘못된 GPS 좌표";
+        }
+
+        if (addresses == null || addresses.size() == 0) {
+            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            return "주소 미발견";
+        }
+        Address address = addresses.get(0);
+        return address.getAddressLine(0).toString() + "\n";
+    }
+
+    private void showDialogForLocationServiceSetting() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
+        builder.setTitle("위치 서비스 비활성화");
+        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
+                + "위치 설정을 수정하실래요?");
+        builder.setCancelable(true);
+        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Intent callGPSSettingIntent
+                        = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case GPS_ENABLE_REQUEST_CODE:
+                if (checkLocationServicesStatus()) {
+                    if (checkLocationServicesStatus()) {
+                        Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
+                        checkRunTimePermission();
+                        return;
+                    }
+                }
+                break;
+        }
+    }
+
+    public boolean checkLocationServicesStatus() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
 
 }
