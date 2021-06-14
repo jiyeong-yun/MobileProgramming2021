@@ -28,7 +28,7 @@
 
             <Button
                 android:id="@+id/btn_search"
-                android:foreground="@drawable/search"
+                android:foreground="@drawable/search2"
                 android:background="@drawable/button"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"

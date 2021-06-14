@@ -165,7 +165,7 @@ public class MapActivity extends AppCompatActivity {
     {
         for( int i = 0; i < arrTPoint.size(); i++ )
         {
-            Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_dot);
+            Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
 
             TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
             tMapMarkerItem.setIcon(bitmapIcon);

@@ -137,7 +137,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
     private void setMultiMarkers(ArrayList<TMapPoint> arrTPoint, ArrayList<String> arrTitle,
                                  ArrayList<String> arrAddress) {
         for (int i = 0; i < arrTPoint.size(); i++) {
-            Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_dot);
+            Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
 
             TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
             tMapMarkerItem.setIcon(bitmapIcon);
