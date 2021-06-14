@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -88,13 +89,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO:장소 변경방법 생각... 일자시간 변경...
                 String location = list.get(position).getLocation();
                 int uid = list.get(position).getUid();
+
                 userRepository.delete(list.get(position).getUid());
                 adapter.datas.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                intent.putExtra("location", location);
-                //intent.putExtra("uid", uid);
+
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
+                intent.putExtra("location", location);
+                intent.putExtra("uid", uid);
                 startActivity(intent);
             }
         });
