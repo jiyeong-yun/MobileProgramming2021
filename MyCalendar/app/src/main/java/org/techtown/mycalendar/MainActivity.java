@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                 intent.putExtra("location", location);
-                intent.putExtra("uid", uid);
+                //intent.putExtra("uid", uid);
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
                 startActivity(intent);
             }

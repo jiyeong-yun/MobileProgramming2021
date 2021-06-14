@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -66,8 +68,8 @@ public class MapActivity extends AppCompatActivity {
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
-        double lat2 = 35.84687;
-        double lon2 = 127.12939;
+        double lat2 = 35;
+        double lon2 = 127;
 
         initialize(tmapview);
 
@@ -83,14 +85,18 @@ public class MapActivity extends AppCompatActivity {
 
         double lat1 = gpsTracker.getLatitude();
         double lon1 = gpsTracker.getLongitude();
+
+        setMultiMarkers2(lat1, lon1); //현재위치 마커표시
         tmapview.setCenterPoint(lon1, lat1);
         tmapview.setLocationPoint(lon1, lat1);
 
+        SharedPreferences userlocation1 = getSharedPreferences("userlocation1", MODE_PRIVATE);
+        String location = userlocation1.getString("location","");
+        intent.putExtra("location", location);
+
 
         tMapPointStart = new TMapPoint(lat1, lon1);
-        tMapPointEnd = new TMapPoint(lat2, lon2);
-
-        Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
+        Toast.makeText(MapActivity.this, "현재위치:" +location, Toast.LENGTH_LONG).show();
 
         TMapPolyLine polyLine = new TMapPolyLine();
         PathAsync pathAsync = new PathAsync();
@@ -136,6 +142,10 @@ public class MapActivity extends AppCompatActivity {
 
         searchPOI(arrBuilding);
 
+        SharedPreferences userlocation1= getSharedPreferences("userlocation1", MODE_PRIVATE);
+        SharedPreferences.Editor editor= userlocation1.edit();
+        editor.putString("location", location);
+        editor.commit();
     }
 
 
@@ -158,7 +168,6 @@ public class MapActivity extends AppCompatActivity {
                                 tMapPOIItem.middleAddrName + " " + tMapPOIItem.lowerAddrName);
                     }
                     setMultiMarkers(arrTMapPoint, arrTitle, arrAddress);
-
                 }
             });
         }
@@ -179,6 +188,18 @@ public class MapActivity extends AppCompatActivity {
 
             setBalloonView(tMapMarkerItem, arrTitle.get(i), arrAddress.get(i));
         }
+    }
+
+    private void setMultiMarkers2(double lat, double lon){
+        Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
+
+        TMapPoint tMapPoint = new TMapPoint(lat, lon);
+        TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
+        tMapMarkerItem.setIcon(bitmapIcon);
+
+        tMapMarkerItem.setTMapPoint(tMapPoint);
+
+        tmapview.addMarkerItem("markerItem", tMapMarkerItem);
     }
 
     // 풍선뷰

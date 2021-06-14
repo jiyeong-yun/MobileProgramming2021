@@ -155,21 +155,19 @@ class SwipeController extends Callback {
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.BLUE);
-        c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("EDIT", c, leftButton, p);
-
-        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.RED);
-        c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("DELETE", c, rightButton, p);
-
         buttonInstance = null; //TODO :버튼 상대쪽 으로 넘기면 안보이게 설정
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+            RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop()+50, itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom()-50);
+            p.setColor(Color.GREEN);
+            c.drawRoundRect(leftButton, corners, corners, p);
+            drawText("수정", c, leftButton, p);
             buttonInstance = leftButton;
         }
         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+            RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()+50, itemView.getRight(), itemView.getBottom()-50);
+            p.setColor(Color.RED);
+            c.drawRoundRect(rightButton, corners, corners, p);
+            drawText("삭제", c, rightButton, p);
             buttonInstance = rightButton;
         }
     }
