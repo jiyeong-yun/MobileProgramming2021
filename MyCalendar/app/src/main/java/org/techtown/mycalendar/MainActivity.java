@@ -90,14 +90,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String location = list.get(position).getLocation();
                 int uid = list.get(position).getUid();
 
-                userRepository.delete(list.get(position).getUid());
+                userRepository.delete(uid);
                 adapter.datas.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-
+                //TODO:수정시 새로운 카드뷰로 인식해 아래로 가는 문제..
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
                 intent.putExtra("location", location);
-                intent.putExtra("uid", uid);
                 startActivity(intent);
             }
         });

@@ -175,8 +175,9 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
     TMapView.OnClickListenerCallback mOnClickListenerCallback = new TMapView.OnClickListenerCallback() {
         @Override
         public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-            double latitude = tMapPoint.getLatitude();
-            double longitude = tMapPoint.getLongitude();
+            //double latitude = tMapPoint.getLatitude();
+            //double longitude = tMapPoint.getLongitude();
+
             return false;
         }
 

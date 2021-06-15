@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.Marker;
+import com.skt.Tmap.TMapAddressInfo;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
@@ -54,7 +55,8 @@ public class MapActivity extends AppCompatActivity {
     TMapPoint tMapPointStart;
     TMapPoint tMapPointEnd;
     private GpsTracker gpsTracker;
-
+    double lat2 = 35.84694;
+    double lon2 = 127.12939;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -67,9 +69,6 @@ public class MapActivity extends AppCompatActivity {
 
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
-
-        double lat2 = 35;
-        double lon2 = 127;
 
         initialize(tmapview);
 
@@ -90,13 +89,16 @@ public class MapActivity extends AppCompatActivity {
         tmapview.setCenterPoint(lon1, lat1);
         tmapview.setLocationPoint(lon1, lat1);
 
-        SharedPreferences userlocation1 = getSharedPreferences("userlocation1", MODE_PRIVATE);
+        /*SharedPreferences userlocation1 = getSharedPreferences("userlocation1", MODE_PRIVATE);
         String location = userlocation1.getString("location","");
         intent.putExtra("location", location);
+*/
 
 
         tMapPointStart = new TMapPoint(lat1, lon1);
-        Toast.makeText(MapActivity.this, "현재위치:" +location, Toast.LENGTH_LONG).show();
+        tMapPointEnd = new TMapPoint(lat2, lon2);
+
+        Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
 
         TMapPolyLine polyLine = new TMapPolyLine();
         PathAsync pathAsync = new PathAsync();
@@ -142,10 +144,10 @@ public class MapActivity extends AppCompatActivity {
 
         searchPOI(arrBuilding);
 
-        SharedPreferences userlocation1= getSharedPreferences("userlocation1", MODE_PRIVATE);
+        /*SharedPreferences userlocation1= getSharedPreferences("userlocation1", MODE_PRIVATE);
         SharedPreferences.Editor editor= userlocation1.edit();
         editor.putString("location", location);
-        editor.commit();
+        editor.commit();*/
     }
 
 
@@ -174,16 +176,15 @@ public class MapActivity extends AppCompatActivity {
     }
 
     // 마커 설정
-    private void setMultiMarkers(ArrayList<TMapPoint> arrTPoint, ArrayList<String> arrTitle,
-                                 ArrayList<String> arrAddress) {
+    private void setMultiMarkers(ArrayList<TMapPoint> arrTPoint, ArrayList<String> arrTitle, ArrayList<String> arrAddress) {
+
         for (int i = 0; i < arrTPoint.size(); i++) {
             Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
-
             TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
+
             tMapMarkerItem.setIcon(bitmapIcon);
 
             tMapMarkerItem.setTMapPoint(arrTPoint.get(i));
-
             tmapview.addMarkerItem("markerItem" + i, tMapMarkerItem);
 
             setBalloonView(tMapMarkerItem, arrTitle.get(i), arrAddress.get(i));
@@ -230,6 +231,7 @@ public class MapActivity extends AppCompatActivity {
 //                Toast.makeText(MapActivity.this, "onPressed~!", Toast.LENGTH_SHORT).show();
             //double lat2 = tMapPoint.getLatitude();
             //double lon2 = tMapPoint.getLongitude();
+            //Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
 
             return false;
         }
