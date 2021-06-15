@@ -81,7 +81,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                     if(position != RecyclerView.NO_POSITION){
                         Intent intent = new Intent(v.getContext(), MapActivity.class);
                         intent.putExtra("position", position);
-                        intent.putExtra("location", location.getText().toString());
+                        intent.putExtra("location", "전북대학교 " + location.getText().toString());
                         Log.d("###", "카드뷰 position: " + position);
                         v.getContext().startActivity(intent);
                     }

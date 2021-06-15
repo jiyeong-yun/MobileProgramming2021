@@ -65,7 +65,8 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
                 SharedPreferences userlocation = getSharedPreferences("userlocation", MODE_PRIVATE);
                 String location = userlocation.getString("location","");
-                intent.putExtra("location", location);
+                String location2 = location.substring(6);
+                intent.putExtra("location", location2); // 위치만
                 startActivity(intent);
                 finish();
                 break;
@@ -84,7 +85,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
             fab.setVisibility(View.VISIBLE);
             SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
             SharedPreferences.Editor editor= userlocation.edit();
-            editor.putString("location", location);
+            editor.putString("location", "전북대학교 " + location);
             editor.commit();
         }
         else
