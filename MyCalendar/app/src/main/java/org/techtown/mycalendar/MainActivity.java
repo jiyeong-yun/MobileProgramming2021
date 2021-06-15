@@ -12,13 +12,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button addBtn;
+    TextView today_date2;
     RecyclerView recyclerView;
     SwipeController swipeController = null;
 
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         addBtn = findViewById(R.id.btn_add);
+        today_date2 = findViewById(R.id.today_date2);
         recyclerView = findViewById(R.id.recyclerView);
 
         addBtn.setOnClickListener(this);
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         userRepository=db.userRepository();
 
+        date();
         recycleView();
     }
 
@@ -50,6 +58,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 일정 추가
         Intent intent = new Intent(getApplicationContext(), Map_AddscheduleActivity.class);
         startActivity(intent);
+    }
+    private void date() {
+        Date currentTime = Calendar.getInstance().getTime();
+        //EE로 요일 표시 가능
+        String date = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(currentTime);
+        today_date2.setText(date);
     }
 
     private void recycleView() {
