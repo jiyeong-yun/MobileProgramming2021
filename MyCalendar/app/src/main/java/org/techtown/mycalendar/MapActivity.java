@@ -53,7 +53,7 @@ public class MapActivity extends AppCompatActivity {
     Intent intent;
     TMapView tmapview;
     TMapPoint tMapPointStart;
-    TMapPoint tMapPointEnd;
+    TMapPoint tMapPointEnd = null;
     private GpsTracker gpsTracker;
 //    double lat2 = 35.84694;
 //    double lon2 = 127.12939;
@@ -70,8 +70,6 @@ public class MapActivity extends AppCompatActivity {
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
-        initialize(tmapview);
-
         if (!checkLocationServicesStatus()) {
 
             showDialogForLocationServiceSetting();
@@ -82,13 +80,7 @@ public class MapActivity extends AppCompatActivity {
 
         gpsTracker = new GpsTracker(MapActivity.this);
 
-
-
-//        Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
-
-        TMapPolyLine polyLine = new TMapPolyLine();
-        PathAsync pathAsync = new PathAsync();
-        pathAsync.execute(polyLine);
+        initialize(tmapview);
     }
 
     private void road(ArrayList<TMapPoint> arrTPoint) {
@@ -97,14 +89,9 @@ public class MapActivity extends AppCompatActivity {
         double lat1 = gpsTracker.getLatitude();
         double lon1 = gpsTracker.getLongitude();
 
-        setMultiMarkers2(lat1, lon1); //현재위치 마커표시
         tmapview.setCenterPoint(lon1, lat1);
         tmapview.setLocationPoint(lon1, lat1);
-
-        /*SharedPreferences userlocation1 = getSharedPreferences("userlocation1", MODE_PRIVATE);
-        String location = userlocation1.getString("location","");
-        intent.putExtra("location", location);
-*/
+        setMultiMarkers2(lat1, lon1); //현재위치 마커표시
 
         point = arrTPoint.get(0).toString();
         Log.d("###", "POI: " + point);
@@ -121,6 +108,10 @@ public class MapActivity extends AppCompatActivity {
 
         tMapPointStart = new TMapPoint(lat1, lon1);
         tMapPointEnd = new TMapPoint(lat2, lon2);
+
+        TMapPolyLine polyLine = new TMapPolyLine();
+        PathAsync pathAsync = new PathAsync();
+        pathAsync.execute(polyLine);
 
     }
 
@@ -223,6 +214,7 @@ public class MapActivity extends AppCompatActivity {
         tMapMarkerItem.setTMapPoint(tMapPoint);
 
         tmapview.addMarkerItem("markerItem", tMapMarkerItem);
+        tMapPointEnd = tMapMarkerItem.getTMapPoint();
     }
 
     // 풍선뷰
@@ -236,6 +228,11 @@ public class MapActivity extends AppCompatActivity {
 //            marker.setCalloutRightButtonImage(bitmap);
         }
     }
+
+    private void gettMapPointEnd(TMapMarkerItem tMapMarkerItem, TMapPoint tMapPoint){
+        tMapPoint = tMapMarkerItem.getTMapPoint();
+    }
+
 
     private Bitmap createMarkerIcon(int image) {
         Log.e("MapViewActivity", "(F)   createMarkerIcon()");
