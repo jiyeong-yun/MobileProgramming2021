@@ -30,7 +30,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.Marker;
 import com.skt.Tmap.TMapAddressInfo;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
@@ -46,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -55,8 +55,8 @@ public class MapActivity extends AppCompatActivity {
     TMapPoint tMapPointStart;
     TMapPoint tMapPointEnd;
     private GpsTracker gpsTracker;
-    double lat2 = 35.84694;
-    double lon2 = 127.12939;
+//    double lat2 = 35.84694;
+//    double lon2 = 127.12939;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -82,6 +82,18 @@ public class MapActivity extends AppCompatActivity {
 
         gpsTracker = new GpsTracker(MapActivity.this);
 
+
+
+//        Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
+
+        TMapPolyLine polyLine = new TMapPolyLine();
+        PathAsync pathAsync = new PathAsync();
+        pathAsync.execute(polyLine);
+    }
+
+    private void road(ArrayList<TMapPoint> arrTPoint) {
+        String point;
+
         double lat1 = gpsTracker.getLatitude();
         double lon1 = gpsTracker.getLongitude();
 
@@ -94,15 +106,22 @@ public class MapActivity extends AppCompatActivity {
         intent.putExtra("location", location);
 */
 
+        point = arrTPoint.get(0).toString();
+        Log.d("###", "POI: " + point);
+        String lat = (String) point.subSequence(4,15);
+        String lon = (String) point.subSequence(20,32);
+        double lat2 = Double.parseDouble(lat);
+        double lon2 = Double.parseDouble(lon);
+
+        Log.d("###", "lat1: " + lat1);
+        Log.d("###", "lon1: " + lon1);
+
+        Log.d("###", "lat2: " + lat2);
+        Log.d("###", "lon2: " + lon2);
 
         tMapPointStart = new TMapPoint(lat1, lon1);
         tMapPointEnd = new TMapPoint(lat2, lon2);
 
-        Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
-
-        TMapPolyLine polyLine = new TMapPolyLine();
-        PathAsync pathAsync = new PathAsync();
-        pathAsync.execute(polyLine);
     }
 
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
@@ -169,6 +188,7 @@ public class MapActivity extends AppCompatActivity {
                         arrAddress.add(tMapPOIItem.upperAddrName + " " +
                                 tMapPOIItem.middleAddrName + " " + tMapPOIItem.lowerAddrName);
                     }
+                    road(arrTMapPoint);
                     setMultiMarkers(arrTMapPoint, arrTitle, arrAddress);
                 }
             });
