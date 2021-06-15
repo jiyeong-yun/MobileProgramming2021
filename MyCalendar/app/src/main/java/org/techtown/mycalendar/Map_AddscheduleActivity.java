@@ -85,7 +85,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
             fab.setVisibility(View.VISIBLE);
             SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
             SharedPreferences.Editor editor= userlocation.edit();
-            editor.putString("location", "전북대학교 " + location);
+            editor.putString("location", location);
             editor.commit();
         }
         else
@@ -128,7 +128,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
 
     private void findPOI() {
         searchText = findViewById(R.id.text_search);
-        value = searchText.getText().toString();
+        value = "전북대학교 " + searchText.getText().toString();
     }
 
     // 마커 설정
