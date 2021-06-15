@@ -154,10 +154,6 @@ public class MapActivity extends AppCompatActivity {
 
         searchPOI(arrBuilding);
 
-        /*SharedPreferences userlocation1= getSharedPreferences("userlocation1", MODE_PRIVATE);
-        SharedPreferences.Editor editor= userlocation1.edit();
-        editor.putString("location", location);
-        editor.commit();*/
     }
 
 
@@ -205,7 +201,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void setMultiMarkers2(double lat, double lon){
-        Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
+        Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_dot);
 
         TMapPoint tMapPoint = new TMapPoint(lat, lon);
         TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
