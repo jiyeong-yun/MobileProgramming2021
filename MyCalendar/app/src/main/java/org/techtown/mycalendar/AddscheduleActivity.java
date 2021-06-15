@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -74,17 +75,21 @@ public class AddscheduleActivity extends AppCompatActivity implements View.OnCli
                 setTime();
                 break;
             case R.id.btn_save:
-                saveData();
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
-                break;
+                if (et_todo.getText().toString().length() == 0)
+                    Toast.makeText(this, "일정을 적어주세요."+et_todo.getText(), Toast.LENGTH_SHORT).show();
+                else {
+                    saveData();
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+                }
         }
     }
 
     private void saveData() {
         Log.d("###", et_todo.getText().toString() + " " + date + " " + time + " " + location + " " + et_memo.getText().toString());
-        Data user = new Data(et_todo.getText().toString(),date,time,location,et_memo.getText().toString());
+        Data user = new Data(et_todo.getText().toString(), date, time, location, et_memo.getText().toString());
         userRepository.insert(user);
     }
 

@@ -99,8 +99,7 @@ public class MapActivity extends AppCompatActivity {
             TMapPolyLine tMapPolyLine = tMapPolyLines[0];
             try {
                 tMapPolyLine = new TMapData().findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, tMapPointStart, tMapPointEnd);
-                tMapPolyLine.setOutLineColor(Color.BLACK);
-                tMapPolyLine.setLineColor(Color.BLACK);
+                tMapPolyLine.setOutLineColor(Color.RED);
                 tMapPolyLine.setLineWidth(4);
 
             } catch (Exception e) {
