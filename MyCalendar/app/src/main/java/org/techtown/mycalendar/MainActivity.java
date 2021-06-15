@@ -6,9 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,8 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -86,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             @Override
             public void onLeftClicked(int position){
-                //TODO:장소 변경방법 생각... 일자시간 변경...
                 String location = list.get(position).getLocation();
                 int uid = list.get(position).getUid();
 
@@ -94,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.datas.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-                //TODO:수정시 새로운 카드뷰로 인식해 아래로 가는 문제..
+
                 intent = new Intent(getApplicationContext(), AddscheduleActivity.class);
                 intent.putExtra("location", location);
                 startActivity(intent);

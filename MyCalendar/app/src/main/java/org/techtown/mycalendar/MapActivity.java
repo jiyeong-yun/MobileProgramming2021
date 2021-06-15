@@ -6,12 +6,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,35 +16,24 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.skt.Tmap.TMapAddressInfo;
 import com.skt.Tmap.TMapData;
-import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class MapActivity extends AppCompatActivity {
     Intent intent;
@@ -55,8 +41,6 @@ public class MapActivity extends AppCompatActivity {
     TMapPoint tMapPointStart;
     TMapPoint tMapPointEnd = null;
     private GpsTracker gpsTracker;
-//    double lat2 = 35.84694;
-//    double lon2 = 127.12939;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -70,13 +54,8 @@ public class MapActivity extends AppCompatActivity {
         tmapview = new TMapView(this);
         tmapview.setSKTMapApiKey("l7xxf07bcc5a789e4d678d5622e927b5e84a");
 
-        if (!checkLocationServicesStatus()) {
-
-            showDialogForLocationServiceSetting();
-        } else {
-
-            checkRunTimePermission();
-        }
+        if (!checkLocationServicesStatus()) { showDialogForLocationServiceSetting(); }
+        else {checkRunTimePermission(); }
 
         gpsTracker = new GpsTracker(MapActivity.this);
 
@@ -112,7 +91,6 @@ public class MapActivity extends AppCompatActivity {
         TMapPolyLine polyLine = new TMapPolyLine();
         PathAsync pathAsync = new PathAsync();
         pathAsync.execute(polyLine);
-
     }
 
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
@@ -122,6 +100,7 @@ public class MapActivity extends AppCompatActivity {
             try {
                 tMapPolyLine = new TMapData().findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, tMapPointStart, tMapPointEnd);
                 tMapPolyLine.setOutLineColor(Color.BLACK);
+                tMapPolyLine.setLineColor(Color.BLACK);
                 tMapPolyLine.setLineWidth(4);
 
             } catch (Exception e) {
@@ -153,9 +132,7 @@ public class MapActivity extends AppCompatActivity {
         arrBuilding.add(location);
 
         searchPOI(arrBuilding);
-
     }
-
 
     // 주변 명칭 검색
     private void searchPOI(ArrayList<String> arrPOI) {
@@ -179,14 +156,11 @@ public class MapActivity extends AppCompatActivity {
                     setMultiMarkers(arrTMapPoint, arrTitle, arrAddress);
                 }
             });
-
-
         }
     }
 
     // 마커 설정
     private void setMultiMarkers(ArrayList<TMapPoint> arrTPoint, ArrayList<String> arrTitle, ArrayList<String> arrAddress) {
-
         for (int i = 0; i < arrTPoint.size(); i++) {
             Bitmap bitmapIcon = createMarkerIcon(R.drawable.poi_red);
             TMapMarkerItem tMapMarkerItem = new TMapMarkerItem();
@@ -220,15 +194,8 @@ public class MapActivity extends AppCompatActivity {
         if (marker.getCanShowCallout()) {
             marker.setCalloutTitle(title);
             marker.setCalloutSubTitle(address);
-//            Bitmap bitmap = createMarkerIcon(R.drawable.right_arrow);
-//            marker.setCalloutRightButtonImage(bitmap);
         }
     }
-
-    private void gettMapPointEnd(TMapMarkerItem tMapMarkerItem, TMapPoint tMapPoint){
-        tMapPoint = tMapMarkerItem.getTMapPoint();
-    }
-
 
     private Bitmap createMarkerIcon(int image) {
         Log.e("MapViewActivity", "(F)   createMarkerIcon()");
@@ -243,14 +210,8 @@ public class MapActivity extends AppCompatActivity {
     TMapView.OnClickListenerCallback mOnClickListenerCallback = new TMapView.OnClickListenerCallback() {
         @Override
         public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-//                Toast.makeText(MapActivity.this, "onPressed~!", Toast.LENGTH_SHORT).show();
-            //double lat2 = tMapPoint.getLatitude();
-            //double lon2 = tMapPoint.getLongitude();
-            //Toast.makeText(MapActivity.this, "현재위치:" +tMapPointEnd, Toast.LENGTH_LONG).show();
-
             return false;
         }
-
         @Override
         public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
 //                Toast.makeText(MapActivity.this, "onPressUp~!", Toast.LENGTH_SHORT).show();
@@ -271,8 +232,7 @@ public class MapActivity extends AppCompatActivity {
                 }
             }
 
-            if (check_result) { ;
-            }
+            if (check_result) { ; }
             else {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])
                         || ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[1])) {
@@ -287,22 +247,17 @@ public class MapActivity extends AppCompatActivity {
     }
 
     void checkRunTimePermission() {
-        int hasFineLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
-                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
-        } else {
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED && hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) { }
+        else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(MapActivity.this, REQUIRED_PERMISSIONS[0])) {
 
                 Toast.makeText(MapActivity.this, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_LONG).show();
-                ActivityCompat.requestPermissions(MapActivity.this, REQUIRED_PERMISSIONS,
-                        PERMISSIONS_REQUEST_CODE);
-            } else {
-               ActivityCompat.requestPermissions(MapActivity.this, REQUIRED_PERMISSIONS,
-                        PERMISSIONS_REQUEST_CODE);
+                ActivityCompat.requestPermissions(MapActivity.this, REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            }
+            else { ActivityCompat.requestPermissions(MapActivity.this, REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
             }
         }
     }
@@ -333,8 +288,7 @@ public class MapActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
         builder.setTitle("위치 서비스 비활성화");
-        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
-                + "위치 설정을 수정하실래요?");
+        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 진행하시겠습니까?");
         builder.setCancelable(true);
         builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
             @Override
@@ -373,8 +327,6 @@ public class MapActivity extends AppCompatActivity {
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-
 }

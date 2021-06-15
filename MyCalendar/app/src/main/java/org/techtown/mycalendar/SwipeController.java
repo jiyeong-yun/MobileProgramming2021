@@ -1,5 +1,7 @@
 package org.techtown.mycalendar;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,6 +9,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import androidx.recyclerview.widget.ItemTouchHelper.Callback;
@@ -48,9 +51,7 @@ class SwipeController extends Callback {
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-    }
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) { }
 
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
@@ -62,7 +63,8 @@ class SwipeController extends Callback {
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                            float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
                 if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
@@ -80,6 +82,7 @@ class SwipeController extends Callback {
         currentItemViewHolder = viewHolder;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setTouchListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -99,6 +102,7 @@ class SwipeController extends Callback {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setTouchDownListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -111,6 +115,7 @@ class SwipeController extends Callback {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setTouchUpListener(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder, final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -151,21 +156,21 @@ class SwipeController extends Callback {
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
         float buttonWidthWithoutPadding = buttonWidth - 20;
         float corners = 16;
-
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        buttonInstance = null; //TODO :버튼 상대쪽 으로 넘기면 안보이게 설정
+        buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
             RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop()+50, itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom()-50);
-            p.setColor(Color.GREEN);
+
+            p.setColor(Color.parseColor("#41A5EE"));
             c.drawRoundRect(leftButton, corners, corners, p);
             drawText("수정", c, leftButton, p);
             buttonInstance = leftButton;
         }
         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
             RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()+50, itemView.getRight(), itemView.getBottom()-50);
-            p.setColor(Color.RED);
+            p.setColor(Color.parseColor("#DD5044"));
             c.drawRoundRect(rightButton, corners, corners, p);
             drawText("삭제", c, rightButton, p);
             buttonInstance = rightButton;

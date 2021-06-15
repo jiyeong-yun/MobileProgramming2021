@@ -100,12 +100,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         tmapview.setOnClickListenerCallBack(mOnClickListenerCallback);
         tmapview.setZoomLevel(15);
         tmapview.setCenterPoint(127.129436, 35.846964);
-
-        // 마커표시
-        /*ArrayList<String> arrBuilding = new ArrayList<>();
-        arrBuilding.add("공과대학 7호관");
-        searchPOI(arrBuilding);*/
-
     }
 
     // 주변 명칭 검색
@@ -160,8 +154,6 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         if (marker.getCanShowCallout()) {
             marker.setCalloutTitle(title);
             marker.setCalloutSubTitle(address);
-//            Bitmap bitmap = createMarkerIcon(R.drawable.right_arrow);
-//            marker.setCalloutRightButtonImage(bitmap);
         }
     }
 
@@ -175,16 +167,11 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         return bitmap;
     }
 
-    // TODO: 지도 이벤트 설정하기
     TMapView.OnClickListenerCallback mOnClickListenerCallback = new TMapView.OnClickListenerCallback() {
         @Override
         public boolean onPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
-            //double latitude = tMapPoint.getLatitude();
-            //double longitude = tMapPoint.getLongitude();
-
             return false;
         }
-
         @Override
         public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint, PointF pointF) {
             return false;

@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
@@ -87,7 +86,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                     }
                 }
             });
-
         }
 
         public void setItem(Data item) {
@@ -97,6 +95,5 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             location.setText(item.getLocation());
             memo.setText(item.getMemo());
         }
-
     }
 }

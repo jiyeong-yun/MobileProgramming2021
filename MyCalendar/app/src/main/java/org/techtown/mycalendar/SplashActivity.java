@@ -22,9 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         //--- 1초 delay
         handler.postDelayed(new Runnable() {
             @Override
-            public void run()
-            {
-                //--- MainActivity로 전환
+            public void run() {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
