@@ -192,6 +192,8 @@ public class MapActivity extends AppCompatActivity {
                     setMultiMarkers(arrTMapPoint, arrTitle, arrAddress);
                 }
             });
+
+
         }
     }
 
