@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skt.Tmap.TMapData;
@@ -78,7 +79,7 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         arrBuilding.add(value);
         searchPOI(arrBuilding);
         // 하나라도 검색하면 플로팅버튼 보이게
-        if(arrBuilding != null) {
+        if(value.length() != 0) {
             String location = arrBuilding.get(0);
             fab.setVisibility(View.VISIBLE);
             SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
@@ -86,6 +87,8 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
             editor.putString("location", location);
             editor.commit();
         }
+        else
+            Toast.makeText(Map_AddscheduleActivity.this, "장소를 검색해주세요!", Toast.LENGTH_LONG).show();
     }
 
     private void initialize(TMapView tmapview) {
