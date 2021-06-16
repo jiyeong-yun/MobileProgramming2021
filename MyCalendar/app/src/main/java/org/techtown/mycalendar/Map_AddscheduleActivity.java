@@ -78,9 +78,9 @@ public class Map_AddscheduleActivity extends AppCompatActivity implements View.O
         findPOI();
         ArrayList<String> arrBuilding = new ArrayList<>();
         arrBuilding.add(value);
-        searchPOI(arrBuilding);
         // 하나라도 검색하면 플로팅버튼 보이게
-        if(value.length() != 0) {
+        if(value.length() != 6) {
+            searchPOI(arrBuilding);
             String location = arrBuilding.get(0);
             fab.setVisibility(View.VISIBLE);
             SharedPreferences userlocation= getSharedPreferences("userlocation", MODE_PRIVATE);
